@@ -117,3 +117,7 @@ The page can only read and write files inside `~/cyber-todo/`; the main process 
 ## Notes
 
 This is a personal fan project. Its look borrows colours and layout conventions common to cyberpunk game interfaces. It is not affiliated with CD PROJEKT RED and uses no game assets.
+
+## License
+
+[MIT](LICENSE)

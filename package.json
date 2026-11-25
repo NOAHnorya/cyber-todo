@@ -11,6 +11,7 @@
     "build": "bash scripts/build.sh"
   },
   "author": "NOAHnorya",
+  "license": "MIT",
   "devDependencies": {
     "@electron/packager": "^20.3.0",
     "electron": "^45.5.0"
