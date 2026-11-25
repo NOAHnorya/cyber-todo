@@ -68,14 +68,6 @@
   html[data-dock="left"] .panel,html[data-dock="left"] .inner{--cut:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px)}
   html[data-dock="left"] .tab{left:0;right:auto;clip-path:polygon(0 0,100% 8px,100% calc(100% - 8px),0 100%)}
   html[data-dock="left"] .note{left:auto;right:20px}
-  /* 贴上：从顶部落下 */
-  html[data-dock="top"] .drawer{top:0;bottom:12px;left:50%;right:auto;transform:translateX(-50%)}
-  html[data-dock="top"] .collapsed .drawer{transform:translate(-50%,-106%)}
-  html[data-dock="top"] .tab{top:0;left:50%;right:auto;width:132px;height:16px;margin:0 0 0 -66px;flex-direction:row;
-    clip-path:polygon(0 0,100% 0,calc(100% - 8px) 100%,8px 100%)}
-  html[data-dock="top"] .tab .n{width:auto;height:100%;padding:0 7px;display:flex;align-items:center}
-  html[data-dock="top"] .tab .bar{width:30px;height:2px}
-  html[data-dock="top"] .note{top:auto;bottom:20px}
   .no-anim .drawer,.no-anim .tab{transition:none !important}
   html.windowed .drawer{transform:none;left:12px;right:12px;width:auto}
   .glow{height:100%;filter:drop-shadow(0 0 10px var(--glow))}
@@ -173,7 +165,7 @@
 <aside class="note" id="note" hidden>
   <h1>赛博待办</h1>
   <p>这里是预览，任务只存在这个浏览器里。</p>
-  <p>装成应用后，它会贴在屏幕边缘（右、左、上可选），用 ⌥⇧T 呼出，任务存到 <span id="notePath"></span>。</p>
+  <p>装成应用后，它会贴在屏幕边缘（右、左可选），用 ⌥⇧T 呼出，任务存到 <span id="notePath"></span>。</p>
   <p id="noteInstall" hidden><button class="btn" id="installBtn" type="button">安装为应用</button></p>
   <p id="noteHow" hidden>在 Claude 桌面端打开这个工件，从它的菜单里选“安装为应用”（Install as app）。</p>
 </aside>
@@ -228,7 +220,7 @@ const DIR = "~/cyber-todo";
 const PATH = DIR + "/todo.md";
 const HOTKEY = "Alt+Shift+T";
 const HOTKEY_LABEL = "⌥⇧T";
-const WIN_W = 384, WIN_H_MAX = 760, WIN_H_TOP = 620;
+const WIN_W = 384, WIN_H_MAX = 760;
 const WIN_OPTS = { frame: false, transparent: true, alwaysOnTop: true, hasShadow: false, resizable: false,
   minimizable: false, maximizable: false, fullscreenable: false, dragHeight: 0 };
 const HEADER = "# 赛博待办\n\n<!-- 每行一个任务：\"- [ ]\" 未完成，\"- [x]\" 已完成；行尾加 @high 或 @low 表示优先级，不加为普通。可以用任何编辑器或程序直接改这个文件，应用会自动读到。 -->\n\n";
@@ -516,8 +508,8 @@ function renderChip() {
 
 /* ---------- 展开 / 收起 ---------- */
 let prefs = { pinned: false, dock: "right" };
-const DOCKS = ["right", "left", "top"];
-const DOCK_LABEL = { right: "贴右", left: "贴左", top: "贴上" };
+const DOCKS = ["right", "left"];
+const DOCK_LABEL = { right: "贴右", left: "贴左" };
 try { prefs = Object.assign(prefs, JSON.parse(lsGet(LS_PREFS) || "{}")); } catch { /* 用默认值 */ }
 let collapsed = false;
 let shell = null;               // 桌面窗口控制，安装成应用后才有
@@ -545,8 +537,8 @@ function setDock(v, animate) {
   root.dataset.dock = v;
   const next = DOCKS[(DOCKS.indexOf(v) + 1) % DOCKS.length];
   const b = $("dockBtn");
-  b.textContent = DOCK_LABEL[v];
-  b.title = "贴附位置：" + DOCK_LABEL[v].slice(1) + "。点击换到" + DOCK_LABEL[next].slice(1);
+  b.textContent = DOCK_LABEL[next];            // 按钮写的是“点了会去哪边”，不是现在在哪边
+  b.title = "现在贴在" + DOCK_LABEL[v].slice(1) + "边，点击换到" + DOCK_LABEL[next].slice(1) + "边";
   b.setAttribute("aria-label", b.title);
   lsSet(LS_PREFS, JSON.stringify(prefs));
   if (shell && shell.place) shell.place().catch(console.error);
@@ -623,11 +615,8 @@ async function startOverlay(d) {
       disp = displays.find((s) => cx >= s.bounds.x && cx < s.bounds.x + s.bounds.width && cy >= s.bounds.y && cy < s.bounds.y + s.bounds.height) || disp;
     }
     const wa = disp.workArea;
-    const top = prefs.dock === "top";
-    const h = Math.max(320, Math.min(top ? WIN_H_TOP : WIN_H_MAX, wa.height - (top ? 80 : 40)));
-    const want = top
-      ? { x: wa.x + Math.round((wa.width - WIN_W) / 2), y: wa.y, width: WIN_W, height: h }
-      : { x: prefs.dock === "left" ? wa.x : wa.x + wa.width - WIN_W, y: wa.y + Math.round((wa.height - h) / 2), width: WIN_W, height: h };
+    const h = Math.max(320, Math.min(WIN_H_MAX, wa.height - 40));
+    const want = { x: prefs.dock === "left" ? wa.x : wa.x + wa.width - WIN_W, y: wa.y + Math.round((wa.height - h) / 2), width: WIN_W, height: h };
     if (!cur || cur.x !== want.x || cur.y !== want.y || cur.width !== want.width || cur.height !== want.height) await win.setBounds(want);
     bounds = await win.getBounds();
   }

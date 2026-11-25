@@ -31,7 +31,7 @@ The interface text is in Chinese for now.
 | **Summon from anywhere** | Press `⌥⇧T` in any app and the cursor lands in the input box |
 | **Three priorities** | High, medium and low each have a colour, and the list always sorts by priority |
 | **One file is the database** | `~/cyber-todo/todo.md`: edit it by hand, or let a script or agent append tasks |
-| **Three dock positions** | Right, left or top, switched with one click |
+| **Two dock positions** | Right or left, switched with one click |
 | **Keyboard first** | Add, check, reprioritise, reorder and delete without touching the mouse |
 
 ## Quick start
@@ -73,10 +73,10 @@ Manual reordering only changes the order inside one priority band. Dragging a ta
 
 ## Dock positions
 
-The 贴右 button in the top-right corner of the panel cycles right → left → top. The choice is remembered.
+The button in the top-right corner of the panel names the side it will move to: 贴左 (dock left) while docked right, 贴右 (dock right) while docked left. The choice is remembered.
 
 <p align="center">
-  <img src="docs/docks.png" alt="Docked left, top and right" width="100%">
+  <img src="docs/docks.png" alt="Docked left and right" width="100%">
 </p>
 
 ## Data file
