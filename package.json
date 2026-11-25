@@ -1,0 +1,18 @@
+{
+  "name": "cyber-todo",
+  "productName": "CyberTodo",
+  "version": "0.1.0",
+  "description": "赛博朋克风格的桌面待办：贴在屏幕边缘，不用时收成一个小标签",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "selftest": "CYBER_TODO_SELFTEST=1 CYBER_TODO_DIR=\"$(mktemp -d)\" electron .",
+    "build": "bash scripts/build.sh"
+  },
+  "author": "NOAHnorya",
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "electron": "^45.5.0"
+  }
+}
